@@ -114,13 +114,29 @@ static UIImage *disclosureIndicatorImage = nil;
     _disclosureIndicatorView = [UIImageView new];
     _disclosureIndicatorView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_disclosureIndicatorView];
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)updateConstraints
+{
+    [super updateConstraints];
+    
+    NSLayoutAttribute alignment = NSLayoutAttributeTrailing;
+    CGFloat multiplier = 1.0f;
+    if (self.textAlignment == NSTextAlignmentRight) {
+        alignment = NSLayoutAttributeLeading;
+        multiplier = - 1.0f;
+    } else {
+        multiplier = 1.0f;
+        alignment = NSLayoutAttributeTrailing;
+    }
     [self addConstraints:@[[NSLayoutConstraint constraintWithItem:self
-                                                        attribute:NSLayoutAttributeTrailing
+                                                        attribute:alignment
                                                         relatedBy:NSLayoutRelationEqual
                                                            toItem:_disclosureIndicatorView
-                                                        attribute:NSLayoutAttributeTrailing
-                                                       multiplier:1.0
-                                                         constant:8],
+                                                        attribute:alignment
+                                                       multiplier:1.0f
+                                                         constant:8.0f * multiplier],
                            [NSLayoutConstraint constraintWithItem:_disclosureIndicatorView
                                                         attribute:NSLayoutAttributeCenterY
                                                         relatedBy:NSLayoutRelationEqual
@@ -190,6 +206,7 @@ static UIImage *disclosureIndicatorImage = nil;
             self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
             break;
     }
+    [self setNeedsUpdateConstraints];
 }
 
 - (NSTextAlignment)textAlignment {
